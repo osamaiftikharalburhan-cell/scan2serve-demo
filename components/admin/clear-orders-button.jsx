@@ -4,19 +4,21 @@ import { useState } from 'react';
 import { Trash2 } from 'lucide-react';
 import { Dialog } from '@/components/ui/dialog';
 import { clearAllOrders } from '@/lib/orders/demoStore';
-import { clearWaiterCalls } from '@/lib/orders/waiterCalls';
 import { useToast } from './toast';
 
-/** Owner tool: wipe every order + waiter call stored in this browser (all open tabs update live). */
+/** Owner tool: delete every order (and its waiter call) of this restaurant in Supabase — all devices update live. */
 export function ClearOrdersButton({ slug, count }) {
   const toast = useToast();
   const [open, setOpen] = useState(false);
 
-  function clear() {
-    clearAllOrders(slug);
-    clearWaiterCalls(slug);
+  async function clear() {
     setOpen(false);
-    toast({ text: 'All test orders cleared · every table is free' });
+    try {
+      await clearAllOrders(slug);
+      toast({ text: 'All test orders cleared · every table is free' });
+    } catch (e) {
+      toast({ text: `Could not clear orders: ${e.message}`, tone: 'error' });
+    }
   }
 
   return (
@@ -32,7 +34,7 @@ export function ClearOrdersButton({ slug, count }) {
         open={open}
         onClose={() => setOpen(false)}
         title="Clear all test orders?"
-        description={`Deletes ${count} order${count === 1 ? '' : 's'} and all waiter calls saved in this browser. This can't be undone.`}
+        description={`Deletes ${count} order${count === 1 ? '' : 's'} and their waiter calls from the database, for every device. This can't be undone.`}
         footer={
           <>
             <button type="button" onClick={() => setOpen(false)} className="h-11 flex-1 rounded-xl border font-bold hover:bg-muted">
@@ -44,7 +46,7 @@ export function ClearOrdersButton({ slug, count }) {
           </>
         }
       >
-        <p className="text-sm text-muted-foreground">Customer, kitchen and staff screens open in other tabs update right away.</p>
+        <p className="text-sm text-muted-foreground">Customer, kitchen and staff screens on every device update right away.</p>
       </Dialog>
     </>
   );

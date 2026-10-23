@@ -20,6 +20,8 @@ import {
   isOpenOrder,
   subscribeOrders,
   updateOrderItems,
+  orderSaved,
+  refreshOrders,
   whenOrdersSynced,
 } from '@/lib/orders/demoStore';
 import { FoodCard } from './food-card';
@@ -244,33 +246,40 @@ export function MenuPage({ slug, table }) {
   async function placeOrder() {
     if (!table || lines.length === 0) return;
     setPlacing(true);
-    await new Promise((r) => setTimeout(r, 900)); // demo: feel of a network round-trip
+    // fresh read from Supabase: the order may have been paid, or another phone at this table may have ordered
+    await refreshOrders(slug);
     const items = lines.map(({ item, qty }) => ({ id: item.id, name: item.name, qty, emoji: item.emoji, price: item.price }));
     const added = items.reduce((n, l) => n + l.qty, 0);
-    const addedText = (o) => `Added ${added} item${added === 1 ? '' : 's'} to order #${o.number}`;
 
-    // re-check the lock at submit time: the order may have been paid, or another phone may have ordered
     const current = activeOrder && getOrder(slug, activeOrder.id);
     const open = isOpenOrder(current) ? current : findOpenOrderForTable(slug, table);
     let order = null;
+    let appended = false;
     if (open) {
       order = appendOrderItems(slug, open.id, items, notes.trim());
-      if (order) showToast(addedText(order));
+      appended = true;
     } else {
       try {
         order = addOrder(slug, { table, items, notes: notes.trim() });
       } catch (e) {
         if (!(e instanceof TableLockedError)) throw e;
         order = appendOrderItems(slug, e.order.id, items, notes.trim());
-        if (order) showToast(addedText(order));
+        appended = true;
       }
+    }
+    try {
+      if (order) await orderSaved(slug, order.id); // insert / update reached Supabase
+    } catch (e) {
+      console.error('[order] save failed', e);
+      order = null;
     }
     setPlacing(false);
     if (!order) {
-      showToast('Could not update your order. Please try again.');
+      showToast('Could not send your order. Check your internet and try again.');
       refreshOrder();
       return;
     }
+    showToast(appended ? `Added ${added} item${added === 1 ? '' : 's'} to order #${order.number}` : `Order #${order.number} sent to the kitchen`);
 
     setActiveOrder(order);
     setResumed(false);
