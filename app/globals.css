@@ -1,0 +1,252 @@
+@import 'tailwindcss';
+
+/* ---------- Design tokens (shadcn-style, warm orange/red) ---------- */
+:root {
+  --background: hsl(30 50% 98%);
+  --foreground: hsl(20 14% 10%);
+  --card: hsl(0 0% 100%);
+  --card-foreground: hsl(20 14% 10%);
+  --primary: hsl(21 90% 48%);
+  --primary-foreground: hsl(0 0% 100%);
+  --secondary: hsl(33 100% 96%);
+  --secondary-foreground: hsl(21 80% 30%);
+  --muted: hsl(30 30% 95%);
+  --muted-foreground: hsl(20 8% 42%);
+  --accent: hsl(33 100% 94%);
+  --accent-foreground: hsl(21 90% 35%);
+  --destructive: hsl(0 72% 51%);
+  --destructive-foreground: hsl(0 0% 100%);
+  --success: hsl(142 71% 36%);
+  --success-foreground: hsl(0 0% 100%);
+  --border: hsl(30 30% 90%);
+  --input: hsl(30 30% 88%);
+  --ring: hsl(21 90% 48%);
+  --radius: 1rem;
+}
+
+/* Tailwind v4 theme (replaces tailwind.config.js) */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 4px);
+  --radius-sm: calc(var(--radius) - 8px);
+
+  /* next/font exposes --font-jakarta on <html> */
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+}
+
+@theme {
+  /* Warm brand scale (orange → red), Foodpanda-style */
+  --color-brand-50: #fff7ed;
+  --color-brand-100: #ffedd5;
+  --color-brand-200: #fed7aa;
+  --color-brand-300: #fdba74;
+  --color-brand-400: #fb923c;
+  --color-brand-500: #f97316;
+  --color-brand-600: #ea580c;
+  --color-brand-700: #c2410c;
+  --color-brand-800: #9a3412;
+  --color-brand-900: #7c2d12;
+
+  --shadow-soft: 0 2px 10px -2px rgb(124 45 18 / 0.08), 0 8px 24px -8px rgb(124 45 18 / 0.12);
+  --shadow-glow: 0 10px 30px -10px var(--glow);
+  /* customer app: white + red */
+  --shadow-red: 0 10px 28px -10px rgb(239 68 68 / 0.6); /* #EF4444 */
+
+  --animate-fade-up: fade-up 0.35s ease-out both;
+  --animate-slide-up: slide-up 0.3s cubic-bezier(0.32, 0.72, 0, 1) both;
+  --animate-fade-in: fade-in 0.2s ease-out both;
+  --animate-pop: pop 0.3s ease-out;
+  --animate-float: float 3s ease-in-out infinite;
+  --animate-shrink: shrink 2s linear forwards;
+  --animate-fade-out: fade-out 1s ease-in forwards;
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes slide-up {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes pop {
+    0% {
+      transform: scale(1);
+    }
+    40% {
+      transform: scale(1.18);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  @keyframes fade-out {
+    to {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+  }
+  @keyframes shrink {
+    from {
+      transform: scaleX(1);
+    }
+    to {
+      transform: scaleX(0);
+    }
+  }
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0) rotate(-4deg);
+    }
+    50% {
+      transform: translateY(-6px) rotate(4deg);
+    }
+  }
+}
+
+/* ---------- Red app theme (owner dashboard, staff, login, kitchen) ----------
+   Same white + #EF4444 look as the customer menu. Wrap a page in .theme-red;
+   every brand/primary utility inside it turns red. The landing page stays orange. */
+:root {
+  --brand-gradient-from: #f97316;
+  --brand-gradient-to: #ef4444;
+  --glow: rgb(234 88 12 / 0.55);
+}
+
+@layer base {
+  .theme-red {
+    --background: #ffffff;
+    --foreground: #18181b;
+    --card: #ffffff;
+    --primary: #ef4444;
+    --secondary: #fef2f2;
+    --secondary-foreground: #b91c1c;
+    --muted: #f4f4f5;
+    --muted-foreground: #71717a;
+    --accent: #fef2f2;
+    --accent-foreground: #b91c1c;
+    --border: #e4e4e7;
+    --input: #e4e4e7;
+    --ring: #ef4444;
+  
+    --color-brand-50: #fef2f2;
+    --color-brand-100: #fee2e2;
+    --color-brand-200: #fecaca;
+    --color-brand-300: #fca5a5;
+    --color-brand-400: #f87171;
+    --color-brand-500: #ef4444;
+    --color-brand-600: #ef4444;
+    --color-brand-700: #dc2626;
+    --color-brand-800: #b91c1c;
+    --color-brand-900: #991b1b;
+  
+    --brand-gradient-from: #ef4444;
+    --brand-gradient-to: #ef4444;
+    --glow: rgb(239 68 68 / 0.55);
+    --shadow-glow: 0 10px 30px -10px rgb(239 68 68 / 0.55);
+    --shadow-soft: 0 1px 2px rgb(24 24 27 / 0.04), 0 8px 24px -10px rgb(24 24 27 / 0.1);
+  
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+}
+
+/* ---------- Custom utilities ---------- */
+@utility bg-brand-gradient {
+  background-image: linear-gradient(135deg, var(--brand-gradient-from) 0%, var(--brand-gradient-to) 100%);
+}
+
+@utility container {
+  margin-inline: auto;
+  padding-inline: 1rem;
+  max-width: 80rem;
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility safe-bottom {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
+}
+
+/* ---------- Base ---------- */
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-border);
+  }
+
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* v4 resets buttons to cursor: default — keep the v3 pointer behaviour */
+  button:not(:disabled),
+  [role='button']:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+/* Waiter-call banner: hard red/dark-red blink so it is seen across the room */
+@keyframes waiter-blink {
+  0%, 100% { background-color: rgb(220 38 38); box-shadow: 0 0 0 0 rgb(239 68 68 / 0.7); }
+  50% { background-color: rgb(127 29 29); box-shadow: 0 0 0 8px rgb(239 68 68 / 0); }
+}
+.animate-waiter-blink {
+  animation: waiter-blink 1s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-waiter-blink { animation: none; background-color: rgb(220 38 38); }
+}
