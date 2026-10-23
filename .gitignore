@@ -6,3 +6,7 @@ out/
 .env
 *.log
 .DS_Store
+
+.vercel
+.env*
+!.env.example
